@@ -15,17 +15,34 @@ class TaggingsListStore(gtk.ListStore):
         self.item = tag_io.parseDirectory(taggedPath)
     
         # TODO fill model
+        self.append(['1', '2'])
         
 
 class EditApp(object):
 
+    def initTaggingsTreeView(self, taggedPath):
+        v = self.gui.get_object('taggingsTreeView')
+
+        columnTitles = ['context', 'value']
+
+        for i in range(0, 2):
+            c = gtk.TreeViewColumn(columnTitles[i], gtk.CellRendererText(), text = i)
+            c.set_resizable(True)
+            c.set_sort_column_id(i)
+
+            v.append_column(c)
+
+        self.taggingsListStore = TaggingsListStore(taggedPath)
+        v.set_model(self.taggingsListStore)
+
     def __init__(self, taggedPath):
         self.gui = gtk.Builder()
+        # TODO determine path
+        # TODO join path to make os independent
         self.gui.add_from_file('src/glade/tagEditDialog.glade')
         self.gui.connect_signals(self)
 
-        self.taggingsListStore = TaggingsListStore(taggedPath)
-        self.gui.get_object('taggingsTreeView').set_model(self.taggingsListStore)
+        self.initTaggingsTreeView(taggedPath)
 
         self.editWindow = self.gui.get_object('editWindow')
         self.editWindow.show()

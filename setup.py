@@ -74,7 +74,7 @@ class DemoEditGui(AbstractCommand):
         printEnv()
 
         from tagfs_gui import edit
-        edit.main([sys.argv[0], pjoin('etc', 'demo')])
+        edit.main([sys.argv[0], pjoin('etc', 'demo', '2008-12-25 - holiday india')])
 
 setup(
     cmdclass = {
