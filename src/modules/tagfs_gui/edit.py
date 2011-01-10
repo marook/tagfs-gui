@@ -70,7 +70,6 @@ class LoadTaggingsJob(object):
         self.taggingsListStore = taggingsListStore
 
     def run(self):
-        # TODO do we have to care about synchronization?
         gtk.gdk.threads_enter()
         try:
             self.taggingsListStore.loadTaggings()
