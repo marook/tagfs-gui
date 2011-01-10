@@ -15,7 +15,8 @@ class TaggingsListStore(gtk.ListStore):
         self.item = tag_io.parseDirectory(taggedPath)
     
         # TODO fill model
-        self.append(['1', '2'])
+        for t in self.item.taggings:
+            self.append([t.context, t.value])
         
 
 class EditApp(object):
