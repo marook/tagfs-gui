@@ -115,7 +115,7 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python'
     ],
-    scripts = [pjoin('src', 'bin', 'tagfs-gui')],
-    packages = ['tagfs.gui'],
+    scripts = [pjoin('src', 'bin', 'gtagfs-edit')],
+    packages = ['tagfs_gui'],
     package_dir = {'': pjoin('src', 'modules')}
 )
