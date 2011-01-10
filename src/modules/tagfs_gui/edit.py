@@ -12,18 +12,20 @@ class TaggingsListStore(gtk.ListStore):
 
         self.taggedDir = taggedDir
 
+        self.contextColumn = 0
+        self.valueColumn = 1
+
         self.loadTaggings()
 
-    def setContext(self, path, column, newContext):
-        oldContext = self[path][column]
-
-        # TODO only rename selected tagging / not all context names
-        self.item.renameContext(oldContext, newContext)
+    def setContext(self, path, newContext):
+        self.item.taggings[int(path)].context = newContext
 
         self._updateModelFromItem()
 
-    def setValue(self, path, column, newValue):
-        pass
+    def setValue(self, path, newValue):
+        self.item.taggings[int(path)].value = newValue
+
+        self._updateModelFromItem()
 
     def _updateModelFromItem(self):
         self.clear()
@@ -32,7 +34,6 @@ class TaggingsListStore(gtk.ListStore):
             self.append([t.context, t.value])
 
     def loadTaggings(self):
-        # TODO allow tag file support
         self.item = tag_io.parseDirectory(self.taggedDir)
 
         self._updateModelFromItem()
@@ -48,20 +49,26 @@ class EditApp(object):
     def initTaggingsTreeView(self, taggedPath):
         v = self.gui.get_object('taggingsTreeView')
 
-        columnTitles = ['context', 'value']
-
         self.taggingsListStore = TaggingsListStore(taggedPath)
         v.set_model(self.taggingsListStore)
 
         def editedContext(cell, path, newText):
-            self.taggingsListStore.setContext(path, 0, newText)
+            self.taggingsListStore.setContext(path, newText)
 
         def editedValue(cell, path, newText):
-            self.taggingsListStore.setValue(path, 0, newText)
+            self.taggingsListStore.setValue(path, newText)
 
-        columnEditCallbacks = [editedContext, editedValue]
+        numberOfColumns = 2
 
-        for i in range(0, 2):
+        columnEditCallbacks = numberOfColumns * [None]
+        columnEditCallbacks[self.taggingsListStore.contextColumn] = editedContext
+        columnEditCallbacks[self.taggingsListStore.valueColumn] =  editedValue
+
+        columnTitles = 2 * [None]
+        columnTitles[self.taggingsListStore.contextColumn] = 'context'
+        columnTitles[self.taggingsListStore.valueColumn] = 'value'
+
+        for i in range(0, numberOfColumns):
             r = gtk.CellRendererText()
             r.set_property('editable', True)
             r.connect('edited', columnEditCallbacks[i])
@@ -79,6 +86,7 @@ class EditApp(object):
         self.gui.add_from_file('src/glade/tagEditDialog.glade')
         self.gui.connect_signals(self)
 
+        # TODO implement tag file support
         self.initTaggingsTreeView(taggedPath)
 
         self.editWindow = self.gui.get_object('editWindow')
