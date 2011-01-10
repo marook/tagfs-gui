@@ -6,7 +6,7 @@
   <object class="GtkListStore" id="valuesModel"/>
   <object class="GtkListStore" id="taggingsModel"/>
   <object class="GtkWindow" id="editWindow">
-    <signal name="destroy" handler="gtk_main_quit"/>
+    <signal name="destroy" handler="on_cancelAction_activate"/>
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>

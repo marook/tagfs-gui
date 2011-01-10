@@ -3,4 +3,4 @@
 import sys
 from tagfs_gui import edit
 
-sys.exit(edit.main())
+sys.exit(edit.main(sys.argv))

@@ -11,14 +11,15 @@ class EditApp(object):
         self.editWindow = self.gui.get_object('editWindow')
         self.editWindow.show()
 
-    def gtk_main_quit(self, w):
+    def on_saveAction_activate(self, w):
+        pass
+
+    def on_cancelAction_activate(self, w):
         gtk.main_quit()
 
-def main():
-    import sys
-
+def main(args):
     # TODO show popup when no args are passed
-    app = EditApp(sys.argv[0])
+    app = EditApp(args[1])
 
     gtk.main()
 

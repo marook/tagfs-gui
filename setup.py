@@ -74,7 +74,7 @@ class DemoEditGui(AbstractCommand):
         printEnv()
 
         from tagfs_gui import edit
-        edit.main()
+        edit.main([sys.argv[0], 'etc/demo'])
 
 setup(
     cmdclass = {
