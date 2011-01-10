@@ -14,12 +14,29 @@ class TaggingsListStore(gtk.ListStore):
 
         self.loadTaggings()
 
+    def setContext(self, path, column, newContext):
+        oldContext = self[path][column]
+
+        # TODO only rename selected tagging / not all context names
+        self.item.renameContext(oldContext, newContext)
+
+        self._updateModelFromItem()
+
+    def setValue(self, path, column, newValue):
+        pass
+
+    def _updateModelFromItem(self):
+        self.clear()
+
+        for t in self.item.taggings:
+            self.append([t.context, t.value])
+
     def loadTaggings(self):
         # TODO allow tag file support
         self.item = tag_io.parseDirectory(self.taggedDir)
+
+        self._updateModelFromItem()
     
-        for t in self.item.taggings:
-            self.append([t.context, t.value])
 
     def saveTaggings(self):
         tagFileName = os.path.join(self.taggedDir, tag_io.DEFAULT_TAG_FILE_NAME)
@@ -33,15 +50,27 @@ class EditApp(object):
 
         columnTitles = ['context', 'value']
 
+        self.taggingsListStore = TaggingsListStore(taggedPath)
+        v.set_model(self.taggingsListStore)
+
+        def editedContext(cell, path, newText):
+            self.taggingsListStore.setContext(path, 0, newText)
+
+        def editedValue(cell, path, newText):
+            self.taggingsListStore.setValue(path, 0, newText)
+
+        columnEditCallbacks = [editedContext, editedValue]
+
         for i in range(0, 2):
-            c = gtk.TreeViewColumn(columnTitles[i], gtk.CellRendererText(), text = i)
+            r = gtk.CellRendererText()
+            r.set_property('editable', True)
+            r.connect('edited', columnEditCallbacks[i])
+
+            c = gtk.TreeViewColumn(columnTitles[i], r, text = i)
             c.set_resizable(True)
             c.set_sort_column_id(i)
 
             v.append_column(c)
-
-        self.taggingsListStore = TaggingsListStore(taggedPath)
-        v.set_model(self.taggingsListStore)
 
     def __init__(self, taggedPath):
         self.gui = gtk.Builder()
@@ -60,6 +89,7 @@ class EditApp(object):
         gtk.main_quit()
 
     def on_saveAction_activate(self, w):
+        # TODO display save errors
         self.taggingsListStore.saveTaggings()
 
         self.quit()
