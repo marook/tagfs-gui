@@ -27,9 +27,8 @@ class JobRunner(threading.Thread):
                 self.jobDescCallback(job.description)
 
                 job.run()
-            except:
-                # TODO show error message to user and continue
-                pass
+
+                # TODO catch job errors and show to user
             finally:
                 with self.jobsLock:
                     self.executedJob = None

@@ -45,6 +45,22 @@ class TaggingsListStore(gtk.ListStore):
 
         tag_io.writeFile(self.item, tagFileName)
 
+class ContextsListStore(gtk.ListStore):
+    
+    def __init__(self, contexts):
+        super(ContextsListStore, self).__init__(str)
+
+        for c in contexts:
+            self.append([c, ])
+
+class ValuesListStore(gtk.ListStore):
+    
+    def __init__(self, values):
+        super(ValuesListStore, self).__init__(str)
+
+        for v in values:
+            self.append([v, ])
+
 class LoadTaggingsJob(object):
 
     def __init__(self, saveAction, taggingsTreeView, taggingsListStore):
@@ -55,10 +71,55 @@ class LoadTaggingsJob(object):
 
     def run(self):
         # TODO do we have to care about synchronization?
-        self.taggingsListStore.loadTaggings()
+        gtk.gdk.threads_enter()
+        try:
+            self.taggingsListStore.loadTaggings()
 
-        self.taggingsTreeView.set_sensitive(True)
-        self.saveAction.set_sensitive(True)
+            self.taggingsTreeView.set_sensitive(True)
+            self.saveAction.set_sensitive(True)
+        finally:
+            gtk.gdk.threads_leave()
+
+class LoadContextsAndValuesJob(object):
+    
+    def __init__(self, taggedDir, contextsTreeView, valuesTreeView):
+        self.description = 'Loading all taggings...'
+        self.dbDir = os.path.join(taggedDir, '..')
+        self.contextsTreeView = contextsTreeView
+        self.valuesTreeView = valuesTreeView
+
+    def initContextTreeView(self, db):
+        c = gtk.TreeViewColumn('contexts', gtk.CellRendererText(), text = 0)
+        c.set_sort_column_id(0)
+
+        listStore = ContextsListStore(db.contexts)
+        self.contextsTreeView.set_model(listStore)
+
+        self.contextsTreeView.append_column(c)
+
+        self.contextsTreeView.set_sensitive(True)
+
+    def initValuesTreeView(self, db):
+        c = gtk.TreeViewColumn('values', gtk.CellRendererText(), text = 0)
+        c.set_sort_column_id(0)
+
+        listStore = ValuesListStore(db.values)
+        self.valuesTreeView.set_model(listStore)
+
+        self.valuesTreeView.append_column(c)
+
+        self.valuesTreeView.set_sensitive(True)
+
+    def run(self):
+        # TODO check stop flag during parsing
+        db = tag_io.parseDatabaseDirectory(self.dbDir)
+
+        gtk.gdk.threads_enter()
+        try:
+            self.initContextTreeView(db)
+            self.initValuesTreeView(db)
+        finally:
+            gtk.gdk.threads_leave()
 
 class EditApp(object):
 
@@ -95,17 +156,23 @@ class EditApp(object):
 
             self.taggingsTreeView.append_column(c)
 
-    def initJobRunner(self):
+    def initJobRunner(self, taggedDir):
         self.statusBar = self.gui.get_object('statusbar')
+        self.contextsTreeView = self.gui.get_object('contextsTreeView')
+        self.valuesTreeView = self.gui.get_object('valuesTreeView')
 
         jobRunnerContextId = self.statusBar.get_context_id('JobRunnerDescriptions')
         def setJobDescription(desc):
-            if desc is None:
-                self.statusBar.pop(jobRunnerContextId)
-            else:
-                self.statusBar.push(jobRunnerContextId, desc)
+            gtk.gdk.threads_enter()
+            try:
+                if desc is None:
+                    self.statusBar.pop(jobRunnerContextId)
+                else:
+                    self.statusBar.push(jobRunnerContextId, desc)
+            finally:
+                gtk.gdk.threads_leave()
 
-        self.jobRunner = job.JobRunner([LoadTaggingsJob(self.saveAction, self.taggingsTreeView, self.taggingsListStore)], setJobDescription)
+        self.jobRunner = job.JobRunner([LoadTaggingsJob(self.saveAction, self.taggingsTreeView, self.taggingsListStore), LoadContextsAndValuesJob(taggedDir, self.contextsTreeView, self.valuesTreeView)], setJobDescription)
         self.jobRunner.start()
 
     def __init__(self, taggedPath):
@@ -124,7 +191,7 @@ class EditApp(object):
         self.editWindow.set_title('tagging ' + taggedPath)
         self.editWindow.show()
 
-        self.initJobRunner()
+        self.initJobRunner(taggedPath)
 
     def quit(self):
         with self.jobRunner.jobsLock:
