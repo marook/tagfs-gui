@@ -10,6 +10,7 @@
     <property name="default_width">400</property>
     <property name="default_height">300</property>
     <signal name="destroy" handler="on_cancelAction_activate"/>
+    <signal name="key_press_event" handler="on_editWindow_key_press_event"/>
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>

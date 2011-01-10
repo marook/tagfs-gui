@@ -22,6 +22,7 @@ import os.path
 import gtk
 import gtk.glade
 
+from tag_utils import dom
 from tag_utils import tag_io
 
 from tagfs_gui import job
@@ -63,6 +64,13 @@ class TaggingsListStore(gtk.ListStore):
         tagFileName = os.path.join(self.taggedDir, tag_io.DEFAULT_TAG_FILE_NAME)
 
         tag_io.writeFile(self.item, tagFileName)
+
+    def appendNewTagging(self):
+        self.item.entries.append(dom.Tagging('', ''))
+
+        self._updateModelFromItem()
+
+        return len(self.item.taggings) - 1
 
 class ContextsListStore(gtk.ListStore):
     
@@ -159,9 +167,11 @@ class EditApp(object):
         columnEditCallbacks[self.taggingsListStore.contextColumn] = editedContext
         columnEditCallbacks[self.taggingsListStore.valueColumn] =  editedValue
 
-        columnTitles = 2 * [None]
+        columnTitles = numberOfColumns * [None]
         columnTitles[self.taggingsListStore.contextColumn] = 'context'
         columnTitles[self.taggingsListStore.valueColumn] = 'value'
+
+        columns = numberOfColumns * [None]
 
         for i in range(0, numberOfColumns):
             r = gtk.CellRendererText()
@@ -172,7 +182,12 @@ class EditApp(object):
             c.set_resizable(True)
             c.set_sort_column_id(i)
 
+            columns[i] = c
+
             self.taggingsTreeView.append_column(c)
+
+        self.taggingsContextColumn = columns[0]
+        self.taggingsValueColumn = columns[1]
 
     def initJobRunner(self, taggedDir):
         self.statusBar = self.gui.get_object('statusbar')
@@ -221,6 +236,7 @@ class EditApp(object):
 
         self.editWindow = self.gui.get_object('editWindow')
         self.editWindow.set_title('tagging ' + taggedPath)
+        self.editWindow.set_focus(self.taggingsTreeView)
         self.editWindow.show()
 
         self.initJobRunner(taggedPath)
@@ -242,6 +258,23 @@ class EditApp(object):
 
     def on_cancelAction_activate(self, w):
         self.quit()
+
+    def appendNewTagging(self):
+        row = self.taggingsListStore.appendNewTagging()
+
+        self.taggingsTreeView.set_cursor_on_cell(str(row), self.taggingsContextColumn, start_editing = True)
+
+    def on_editWindow_key_press_event(self, w, e):
+        key = e.keyval
+
+        print 'key: %s' % key
+
+        if key == 116: # t
+            self.appendNewTagging()
+
+            return True
+        else:
+            return
 
 def main(args):
     gtk.gdk.threads_init()
