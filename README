@@ -28,13 +28,9 @@ export PYTHONPATH=~/.local/lib/python:$PYTHONPATH
 ---------------------------------------------------------------------
 Usage
 
-After installation tagfs can be started the following way.
+After installation tagfs-gui can be started the following way.
 
-Mount a tagged directory:
-$ tagfs -i /path/to/my/items/directory /path/to/my/mount/point
-
-Unmount a tagged directory: 
-$ fusermount -u /path/to/my/mount/point
+$ gtagfs-edit /path/to/my/tagged_item
 
 ---------------------------------------------------------------------
 Tests
