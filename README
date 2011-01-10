@@ -1,0 +1,52 @@
+tagfs - tag file system
+
+1) Requirements
+2) Installation
+3) Usage
+4) Tests
+5) Contact
+
+---------------------------------------------------------------------
+Requirements
+
+* python 2.5, 2.6
+* GTK python bindings
+* glade python bindings
+
+---------------------------------------------------------------------
+Installation
+
+To install tagfs-gui into your home directory type the following:
+
+$ python setup.py install --home ~/.local
+
+If you haven't already extended your local python path then add the following
+to your environment configuration script. For example to your .bashrc:
+
+export PYTHONPATH=~/.local/lib/python:$PYTHONPATH
+
+---------------------------------------------------------------------
+Usage
+
+After installation tagfs can be started the following way.
+
+Mount a tagged directory:
+$ tagfs -i /path/to/my/items/directory /path/to/my/mount/point
+
+Unmount a tagged directory: 
+$ fusermount -u /path/to/my/mount/point
+
+---------------------------------------------------------------------
+Tests
+
+You can execute the test cases via the setup.py script in the project's root
+directory.
+
+$ python setup.py test
+
+---------------------------------------------------------------------
+Contact
+
+* homepage: http://wiki.github.com/marook/tagfs-gui
+* user group: http://groups.google.com/group/tagfs
+* author: Markus Pielmeier <markus.pielmeier@googlemail.com>
