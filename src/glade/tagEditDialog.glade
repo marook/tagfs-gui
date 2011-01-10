@@ -44,6 +44,7 @@
                     <child>
                       <object class="GtkTreeView" id="taggingsTreeView">
                         <property name="visible">True</property>
+                        <property name="sensitive">False</property>
                         <property name="can_focus">True</property>
                         <property name="model">taggingsModel</property>
                       </object>
@@ -87,6 +88,7 @@
                         <child>
                           <object class="GtkTreeView" id="contextsTreeView">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="can_focus">True</property>
                             <property name="model">contextsModel</property>
                             <property name="headers_visible">False</property>
@@ -126,6 +128,7 @@
                         <child>
                           <object class="GtkTreeView" id="valuesTreeView">
                             <property name="visible">True</property>
+                            <property name="sensitive">False</property>
                             <property name="can_focus">True</property>
                             <property name="model">valuesModel</property>
                             <property name="headers_visible">False</property>
@@ -209,6 +212,7 @@
   <object class="GtkAction" id="saveAction">
     <property name="label">Save</property>
     <property name="stock_id">gtk-save</property>
+    <property name="sensitive">False</property>
     <signal name="activate" handler="on_saveAction_activate"/>
   </object>
   <object class="GtkAction" id="cancelAction">
