@@ -14,10 +14,8 @@ class TaggingsListStore(gtk.ListStore):
         # TODO allow tag file support
         self.item = tag_io.parseDirectory(taggedPath)
     
-        # TODO fill model
         for t in self.item.taggings:
             self.append([t.context, t.value])
-        
 
 class EditApp(object):
 
@@ -46,6 +44,7 @@ class EditApp(object):
         self.initTaggingsTreeView(taggedPath)
 
         self.editWindow = self.gui.get_object('editWindow')
+        self.editWindow.set_title('tagging ' + taggedPath)
         self.editWindow.show()
 
     def on_saveAction_activate(self, w):
