@@ -193,11 +193,25 @@ class EditApp(object):
         self.jobRunner = job.JobRunner([LoadTaggingsJob(self.saveAction, self.taggingsTreeView, self.taggingsListStore), LoadContextsAndValuesJob(taggedDir, self.contextsTreeView, self.valuesTreeView)], setJobDescription)
         self.jobRunner.start()
 
+    def getTagEditDialogGladeFile(self):
+        paths = [
+            os.path.join('src', 'glade', 'tagEditDialog.glade'),
+            os.path.expanduser(os.path.join('~', '.local', 'share', 'tagfs-gui', 'tagEditDialog.glade'))
+            ]
+
+        for p in paths:
+            if not os.path.exists(p):
+                continue
+
+            return p
+
+        raise Exception('Can\'t find tagEditDialog.glade file')
+
     def __init__(self, taggedPath):
         self.gui = gtk.Builder()
         # TODO determine path
         # TODO join path to make os independent
-        self.gui.add_from_file('src/glade/tagEditDialog.glade')
+        self.gui.add_from_file(self.getTagEditDialogGladeFile())
         self.gui.connect_signals(self)
 
         self.saveAction = self.gui.get_object('saveAction')

@@ -115,6 +115,9 @@ setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python'
     ],
+    data_files = [
+        (pjoin('share', 'tagfs-gui'), ['AUTHORS', 'README', 'COPYING', pjoin('src', 'glade', 'tagEditDialog.glade')])
+    ],
     scripts = [pjoin('src', 'bin', 'gtagfs-edit')],
     packages = ['tagfs_gui'],
     package_dir = {'': pjoin('src', 'modules')}
