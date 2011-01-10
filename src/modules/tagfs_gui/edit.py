@@ -1,3 +1,5 @@
+import os.path
+
 import gtk
 import gtk.glade
 
@@ -5,17 +7,24 @@ from tag_utils import tag_io
 
 class TaggingsListStore(gtk.ListStore):
 
-    def __init__(self, taggedPath):
+    def __init__(self, taggedDir):
         super(TaggingsListStore, self).__init__(str, str)
 
-        self.loadTaggingsFromPath(taggedPath)
+        self.taggedDir = taggedDir
 
-    def loadTaggingsFromPath(self, taggedPath):
+        self.loadTaggings()
+
+    def loadTaggings(self):
         # TODO allow tag file support
-        self.item = tag_io.parseDirectory(taggedPath)
+        self.item = tag_io.parseDirectory(self.taggedDir)
     
         for t in self.item.taggings:
             self.append([t.context, t.value])
+
+    def saveTaggings(self):
+        tagFileName = os.path.join(self.taggedDir, tag_io.DEFAULT_TAG_FILE_NAME)
+
+        tag_io.writeFile(self.item, tagFileName)
 
 class EditApp(object):
 
@@ -47,11 +56,16 @@ class EditApp(object):
         self.editWindow.set_title('tagging ' + taggedPath)
         self.editWindow.show()
 
+    def quit(self):
+        gtk.main_quit()
+
     def on_saveAction_activate(self, w):
-        pass
+        self.taggingsListStore.saveTaggings()
+
+        self.quit()
 
     def on_cancelAction_activate(self, w):
-        gtk.main_quit()
+        self.quit()
 
 def main(args):
     # TODO show popup when no args are passed
