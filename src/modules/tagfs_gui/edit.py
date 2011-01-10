@@ -1,12 +1,31 @@
 import gtk
 import gtk.glade
 
+from tag_utils import tag_io
+
+class TaggingsListStore(gtk.ListStore):
+
+    def __init__(self, taggedPath):
+        super(TaggingsListStore, self).__init__(str, str)
+
+        self.loadTaggingsFromPath(taggedPath)
+
+    def loadTaggingsFromPath(self, taggedPath):
+        # TODO allow tag file support
+        self.item = tag_io.parseDirectory(taggedPath)
+    
+        # TODO fill model
+        
+
 class EditApp(object):
 
     def __init__(self, taggedPath):
         self.gui = gtk.Builder()
         self.gui.add_from_file('src/glade/tagEditDialog.glade')
         self.gui.connect_signals(self)
+
+        self.taggingsListStore = TaggingsListStore(taggedPath)
+        self.gui.get_object('taggingsTreeView').set_model(self.taggingsListStore)
 
         self.editWindow = self.gui.get_object('editWindow')
         self.editWindow.show()
