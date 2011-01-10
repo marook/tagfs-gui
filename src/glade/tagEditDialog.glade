@@ -5,7 +5,7 @@
   <object class="GtkListStore" id="contextsModel"/>
   <object class="GtkListStore" id="valuesModel"/>
   <object class="GtkListStore" id="taggingsModel"/>
-  <object class="GtkWindow" id="window1">
+  <object class="GtkWindow" id="editWindow">
     <signal name="destroy" handler="gtk_main_quit"/>
     <child>
       <object class="GtkVBox" id="vbox1">
@@ -126,8 +126,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="related_action">cancelAction</property>
                 <property name="use_action_appearance">True</property>
+                <property name="related_action">cancelAction</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -140,8 +140,8 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="related_action">saveAction</property>
                 <property name="use_action_appearance">True</property>
+                <property name="related_action">saveAction</property>
               </object>
               <packing>
                 <property name="expand">False</property>

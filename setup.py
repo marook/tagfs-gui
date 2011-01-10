@@ -18,12 +18,17 @@ srcDir = pjoin(projectDir, 'src')
 modulesDir = pjoin(srcDir, 'modules')
 testDir = pjoin(srcDir, 'test')
 
-if not os.path.isdir(workdir):
-    os.makedirs(workdir)
+def printEnv():
+    print "..using:"
+    print "  modulesDir:", modulesDir
+    print "  testDir:", testDir
+    print "  sys.path:", sys.path
 
-class test(Command):
-    description = 'run tests'
-    user_options = []
+def setUpTagFsGuiSysPath():
+    sys.path.insert(0, modulesDir)
+    sys.path.insert(0, testDir)
+
+class AbstractCommand(Command):
 
     def initialize_options(self):
         self._cwd = os.getcwd()
@@ -32,19 +37,20 @@ class test(Command):
     def finalize_options(self):
         pass
 
+class test(AbstractCommand):
+    description = 'run tests'
+    user_options = []
+
     def run(self):
         import re
         testPyMatcher = re.compile('(.*/)?test[^/]*[.]py', re.IGNORECASE)
         
         tests = [splitext(basename(f))[0] for f in glob(pjoin(testDir, '*.py')) if testPyMatcher.match(f)]
 
-        print "..using:"
-        print "  modulesDir:", modulesDir
-        print "  testDir:", testDir
+        setUpTagFsGuiSysPath()
+
+        printEnv()
         print "  tests:", tests
-        print "  sys.path:", sys.path
-        sys.path.insert(0, modulesDir)
-        sys.path.insert(0, testDir)
 
         # configure logging
         # TODO not sure how to enable this... it's a bit complicate to enable
@@ -57,9 +63,23 @@ class test(Command):
         suite = TestLoader().loadTestsFromNames(tests)
         TextTestRunner(verbosity = self._verbosity).run(suite)
 
+class DemoEditGui(AbstractCommand):
+
+    description = 'launch gtagfs-edit demo'
+    user_options = []
+
+    def run(self):
+        setUpTagFsGuiSysPath()
+
+        printEnv()
+
+        from tagfs_gui import edit
+        edit.main()
+
 setup(
     cmdclass = {
-        'test': test
+        'test': test,
+        'demo_gtagfs_edit': DemoEditGui
     },
     name = 'tagfs-gui',
     version = '0.0.1',
