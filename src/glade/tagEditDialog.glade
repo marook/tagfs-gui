@@ -28,30 +28,36 @@
                 <property name="hscrollbar_policy">automatic</property>
                 <property name="vscrollbar_policy">automatic</property>
                 <child>
-                  <object class="GtkVBox" id="vbox2">
+                  <object class="GtkViewport" id="viewport1">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
-                    <property name="spacing">3</property>
+                    <property name="resize_mode">queue</property>
                     <child>
-                      <object class="GtkLabel" id="label1">
+                      <object class="GtkVBox" id="vbox2">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">taggings</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">3</property>
+                        <child>
+                          <object class="GtkLabel" id="label1">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">taggings</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkTreeView" id="taggingsTreeView">
+                            <property name="visible">True</property>
+                            <property name="sensitive">False</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">taggingsModel</property>
+                          </object>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkTreeView" id="taggingsTreeView">
-                        <property name="visible">True</property>
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">True</property>
-                        <property name="model">taggingsModel</property>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
@@ -73,30 +79,36 @@
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
                     <child>
-                      <object class="GtkVBox" id="vbox4">
+                      <object class="GtkViewport" id="viewport2">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
+                        <property name="resize_mode">queue</property>
                         <child>
-                          <object class="GtkLabel" id="label2">
+                          <object class="GtkVBox" id="vbox4">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">context</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel" id="label2">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">context</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkTreeView" id="contextsTreeView">
+                                <property name="visible">True</property>
+                                <property name="sensitive">False</property>
+                                <property name="can_focus">True</property>
+                                <property name="model">contextsModel</property>
+                                <property name="headers_visible">False</property>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkTreeView" id="contextsTreeView">
-                            <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="can_focus">True</property>
-                            <property name="model">contextsModel</property>
-                            <property name="headers_visible">False</property>
-                          </object>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -113,30 +125,36 @@
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
                     <child>
-                      <object class="GtkVBox" id="vbox5">
+                      <object class="GtkViewport" id="viewport3">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
+                        <property name="resize_mode">queue</property>
                         <child>
-                          <object class="GtkLabel" id="label3">
+                          <object class="GtkVBox" id="vbox5">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">values</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkLabel" id="label3">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">values</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkTreeView" id="valuesTreeView">
+                                <property name="visible">True</property>
+                                <property name="sensitive">False</property>
+                                <property name="can_focus">True</property>
+                                <property name="model">valuesModel</property>
+                                <property name="headers_visible">False</property>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkTreeView" id="valuesTreeView">
-                            <property name="visible">True</property>
-                            <property name="sensitive">False</property>
-                            <property name="can_focus">True</property>
-                            <property name="model">valuesModel</property>
-                            <property name="headers_visible">False</property>
-                          </object>
-                          <packing>
-                            <property name="position">1</property>
-                          </packing>
                         </child>
                       </object>
                     </child>
@@ -220,5 +238,10 @@
     <property name="label">Cancel</property>
     <property name="stock_id">gtk-cancel</property>
     <signal name="activate" handler="on_cancelAction_activate"/>
+  </object>
+  <object class="GtkWindow" id="window1">
+    <child>
+      <placeholder/>
+    </child>
   </object>
 </interface>
